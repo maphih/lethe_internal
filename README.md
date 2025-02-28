@@ -79,10 +79,10 @@ To use LETHE-abduction (which relies on different reasoning algorithms), add ins
 ## Usage of The Library: Uniform Interpolation
 Depending whether the user wants to specify the signature of the uniform interpolant or a set of symbols to be forgotten, the LETHE offers two interfaces, IOWLInterpolator and IOWLForgetter. Both take as input an ontology object and a list of symbols, which are represented using the data types of the OWL API (see http://owlapi.sourceforge.net/ for further information). Depending on the expressivity of the input ontology, LETHE offers several implementations of these interfaces: the classes AlchTBoxInterpolator, ShqTBoxInterpolator and AlcOntologyInterpolator for uniform interpolation, and the classes AlchTBoxForgetter, ShqTBoxForgetter and AlcOntologyForgetter for forgetting. Axioms present in the ontology that are not supported by the method used will be removed by the implementation. Only AlcOntologyInterpolator and AlcOntologyForgetter support ABoxes, and ShqTBoxInterpolator and ShqTBoxForgetter do not support forgetting roles yet. Here is how the library is used in Java, exemplary for the case of a TBox in the description logic ALCH:
 
-    import uk.ac.man.cs.koopmanp.IOWLInterpolator
-    import uk.ac.man.cs.koopmanp.IOWLForgetter
-    import uk.ac.man.cs.koopmanp.AlchTBoxInterpolator
-    import uk.ac.man.cs.koopmanp.AlchTBoxForgetter
+    import uk.ac.man.cs.lethe.interpolation.IOWLInterpolator
+    import uk.ac.man.cs.lethe.forgetting.IOWLForgetter
+    import uk.ac.man.cs.lethe.interpolation.AlchTBoxInterpolator
+    import uk.ac.man.cs.lethe.forgetting.AlchTBoxForgetter
     
     import org.semanticweb.owlapi.model.OWLEntity
     import org.semanticweb.owlapi.model.OWLOntology
