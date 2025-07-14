@@ -85,7 +85,6 @@
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
-                    <finalName>${project.artifactId}-standalone-${scala.version}</finalName>
                 </configuration>
                 <executions>
                     <execution>
@@ -178,7 +177,6 @@
         <module>LETHE-abduction</module>
         <module>LETHE-abduction-owlapi4</module>
         <module>LETHE-abduction-owlapi5</module>
-        <!--<module>LETHE-unused</module>-->
     </modules>
 
 </project>

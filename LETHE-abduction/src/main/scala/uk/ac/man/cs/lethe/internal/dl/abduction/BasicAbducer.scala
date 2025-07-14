@@ -34,7 +34,7 @@ class BasicAbducer {
     // which sometimes might pull more than necessary. We can thus safely delete the TBox from the forgetting result
     forgettingResult.tbox=new TBox(Set())
 
-    val hypothesis = KBNegator.negate(forgettingResult)
+    val hypothesis = DeNegator.denegate(forgettingResult)//KBNegator.negate(forgettingResult)
 
     hypothesis
   }

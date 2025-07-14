@@ -112,7 +112,7 @@ extends Interpolator[OWLOntology, OWLEntity] with Cancelable {
 
     logger.info(s"Forgetting ${symbolsToForget.size} symbols.")
 
-    println("\n INFO: "+symbolsToForget.size+" to be eliminated.")
+    //println("\n INFO: "+symbolsToForget.size+" to be eliminated.")
 
 
 

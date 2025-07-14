@@ -1,4 +1,4 @@
-package uk.ac.man.cs.lethe.abduction;
+package abduction;
 
 import uk.ac.man.cs.lethe.internal.dl.datatypes.Concept;
 import uk.ac.man.cs.lethe.internal.dl.datatypes.Substitution;

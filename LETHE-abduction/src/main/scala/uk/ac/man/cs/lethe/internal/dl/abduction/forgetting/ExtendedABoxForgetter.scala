@@ -288,19 +288,19 @@ object ExtendedABoxForgetter extends ForgetterWithBackgroundKB[Ontology, String]
 
 
 
-    logger.trace("current ontology before simplification: ")
-    logger.trace(s"${result}")
+    //logger.trace("current ontology before simplification: ")
+    //logger.trace(s"${result}")
 
 
     assert(isCanceled || !result.signature.exists(symbols), result.signature.filter(symbols))
 
-    logger.trace("Result before beautification:")
-    logger.trace(s"${result}")
+    //logger.trace("Result before beautification:")
+    //logger.trace(s"${result}")
 
-    OntologyBeautifier.makeNice(result)
+    //OntologyBeautifier.makeNice(result)
     // if inverse roles are involved, the simplifications can make new definer elimination applications possible
     result = DefinerPurification.purifyRemainingDefiners(result)
-    OntologyBeautifier.makeNice(result)
+    //OntologyBeautifier.makeNice(result)
 
 
     result

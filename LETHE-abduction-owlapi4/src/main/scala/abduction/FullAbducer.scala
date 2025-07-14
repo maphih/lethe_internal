@@ -1,7 +1,7 @@
 package uk.ac.man.cs.lethe.abduction
 
 import com.typesafe.scalalogging.Logger
-import uk.ac.man.cs.lethe.internal.dl.abduction.KBNegator
+import uk.ac.man.cs.lethe.internal.dl.abduction.{DeNegator, KBNegator}
 import uk.ac.man.cs.lethe.internal.dl.abduction.filtering.{AbductionSimplifier, StrongRedundancyChecker}
 import uk.ac.man.cs.lethe.internal.dl.abduction.forgetting.ExtendedABoxForgetter
 import uk.ac.man.cs.lethe.internal.dl.datatypes.extended.DisjunctiveAssertion
@@ -39,7 +39,7 @@ class FullAbducer extends Cancelable {
 
     println("Negating result...")
 
-    val result = KBNegator.negate(forgettingResult)
+    val result = DeNegator.denegate(forgettingResult)//KBNegator.negate(forgettingResult)
 
     println("... negating done.")
 

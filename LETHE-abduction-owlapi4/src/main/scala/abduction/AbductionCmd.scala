@@ -1,11 +1,12 @@
 package uk.ac.man.cs.lethe.abduction.cmd
 
+import abduction.DLStatementAdapter
 import org.semanticweb.owlapi.apibinding.OWLManager
 import org.semanticweb.owlapi.model.parameters.Imports
-import org.semanticweb.owlapi.model.{IRI, OWLEntity, OWLOntologyManager}
-import uk.ac.man.cs.lethe.abduction.{DLStatementAdapter, OWLAbducer}
+import org.semanticweb.owlapi.model.{IRI, OWLEntity}
+import uk.ac.man.cs.lethe.abduction.OWLAbducer
 
-import java.io.{File, FileOutputStream, FileWriter}
+import java.io.{File, FileOutputStream}
 import scala.collection.JavaConverters.{asScalaSetConverter, setAsJavaSetConverter}
 import scala.io.Source
 
@@ -55,7 +56,9 @@ object AbductionCmd {
       val abducer = new OWLAbducer()
       abducer.setBackgroundOntology(ontology)
       abducer.setAbducibles(abducibles)
+      val startTime = System.currentTimeMillis();
       val completeHypothesis = abducer.abduce(observation.getAxioms)
+      println("Complete abduction took "+(System.currentTimeMillis()-startTime)+" miliseconds.");
 
       println("Unravelling hypotheses into OWL ontologies...")
       val adapter = new DLStatementAdapter(completeHypothesis,abducer)

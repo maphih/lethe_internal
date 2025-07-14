@@ -926,7 +926,7 @@ object CheapSimplifier {
   def simplify(assertion: Assertion): Assertion = assertion match {
 
     case ConceptAssertion(c, i) =>
-      simplify(c) match {
+      /*simplify(c) match {
         case ExistentialRoleRestriction(r: BaseRole, NominalSet(nominals)) if nominals.size==1 =>
           RoleAssertion(r, i, nominals.head)
 
@@ -942,7 +942,7 @@ object CheapSimplifier {
         case other =>
           ConceptAssertion(other, i)
 
-      }
+      }*/
       ConceptAssertion(simplify(c), i)
     case DisjunctiveConceptAssertion(cas) => {
       var cas2 = cas.map(simplify(_).asInstanceOf[ConceptAssertion])
@@ -1388,10 +1388,9 @@ object OntologyBeautifier {
           CheapSimplifier.simplify(ConceptDisjunction(
             posPart(Set(b) + ConceptComplement(a)))
           ))
-      //nice(Subsumption(a, ConceptDisjunction(Set(b))))
+      //nice(Subsumption(a, ConceptDisjunction(Set(b)))
 
-
-      case _ => axiom
+      case _ => simplified
     }
   }
 

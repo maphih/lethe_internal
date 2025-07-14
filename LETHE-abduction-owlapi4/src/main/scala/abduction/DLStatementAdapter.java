@@ -1,9 +1,10 @@
-package uk.ac.man.cs.lethe.abduction;
+package abduction;
 
 import org.semanticweb.owlapi.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scala.collection.JavaConverters;
+import uk.ac.man.cs.lethe.abduction.OWLAbducer;
 import uk.ac.man.cs.lethe.internal.dl.datatypes.extended.GreatestFixpoint;
 import uk.ac.man.cs.lethe.internal.dl.datatypes.extended.LeastFixpoint;
 import uk.ac.man.cs.lethe.internal.dl.datatypes.*;
