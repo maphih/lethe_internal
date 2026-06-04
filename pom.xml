@@ -2,17 +2,42 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>de.tu-dresden.inf.lat</groupId>
-    <artifactId>lethe_2.12</artifactId>
-    <version>0.8-SNAPSHOT</version>
+    <groupId>io.github.de-tu-dresden-inf-lat</groupId>
+    <artifactId>lethe</artifactId>
+    <version>0.8.1</version>
     <packaging>pom</packaging>
+    
+    <name>${project.groupId}.${project.artifactId}</name>
+    <description>Tool for uniform interpolation and related tasks for OWL ontologies.</description>
+    <url>https://github.com/PKoopmann/LETHE-0.8</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Patrick Koopmann</name>
+            <email>patrick.koopmann@tu-dresden.de</email>
+            <organization>TU Dresden</organization>
+            <organizationUrl>https://tu-dresden.de</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/PKoopmann/LETHE-0.8.git</connection>
+        <developerConnection>scm:git:ssh://github.com/PKoopmann/LETHE-0.8</developerConnection>
+        <url>https://github.com/PKoopmann/LETHE-0.8s</url>
+    </scm>
 
     <properties>
+        <revision>0.8.1</revision>
         <scala.version>2.12.6</scala.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <skipTests>true</skipTests>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
     </properties>
     <dependencies>
         <dependency>
@@ -66,6 +91,76 @@
         </dependency>
     </dependencies>
 
+    <profiles>
+        <profile>
+            <!-- This profile has to be enabled when releasing the package. It will 
+                    enable the sign & publishing phase. -->
+            <id>sonartypeDeploy</id>
+            <build>
+               <plugins>
+                <plugin>
+                    <groupId>org.sonatype.central</groupId>
+                    <artifactId>central-publishing-maven-plugin</artifactId>
+                    <version>0.3.0</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <publishingServerId>central</publishingServerId>
+                        <tokenAuth>true</tokenAuth>
+                        <autoPublish>true</autoPublish>
+                        <waitUntil>published</waitUntil>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>3.1.0</version>
+                    <configuration>
+                    <gpgArguments>
+                        <arg>--pinentry-mode</arg>
+                        <arg>loopback</arg>
+                    </gpgArguments>
+                    </configuration>
+                    <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>3.3.0</version>
+                    <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>net.alchim31.maven</groupId>
+                    <artifactId>scala-maven-plugin</artifactId>
+                    <version>4.9.9</version>
+                    <executions>
+                        <execution>
+                            <id>attach-javadocs</id>
+                            <goals>
+                                <goal>doc-jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
     <build>
         <plugins>
             <plugin>
@@ -112,17 +207,6 @@
                     <javacOptions>-source 1.8 -target 1.8</javacOptions>
                 </configuration>
             </plugin>
-            <!--
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M5</version>
-                <configuration>
-                    <skipTests>${skipTests}</skipTests>
-                </configuration>
-            </plugin>
-        -->
-        <!-- disable surefire -->
         <plugin>
             <artifactId>maven-jar-plugin</artifactId>
             <version>3.2.2</version>
@@ -139,16 +223,19 @@
                     </configuration>
                 </execution>
             </executions>
-        </plugin><plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.7</version>
-        <configuration>
-            <skipTests>true</skipTests>
-        </configuration>
-    </plugin>
-        <!-- enable scalatest -->
+        </plugin>
 
+        <!-- disable surefire tests -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>2.7</version>
+            <configuration>
+                <skipTests>true</skipTests>
+            </configuration>
+        </plugin>
+
+        <!-- enable scalatest -->
         <plugin>
             <groupId>org.scalatest</groupId>
             <artifactId>scalatest-maven-plugin</artifactId>

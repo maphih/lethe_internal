@@ -1,4 +1,4 @@
-package abduction;
+package uk.ac.man.cs.lethe.abduction;
 
 import org.semanticweb.owlapi.model.*;
 import org.slf4j.Logger;

@@ -3,23 +3,25 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>de.tu-dresden.inf.lat</groupId>
-        <artifactId>lethe_2.12</artifactId>
-        <version>0.8-SNAPSHOT</version>
+        <groupId>io.github.de-tu-dresden-inf-lat</groupId>
+        <artifactId>lethe</artifactId>
+        <version>0.8.1</version>
     </parent>
 
-    <artifactId>lethe-owlapi5_2.12</artifactId>
+    <artifactId>lethe-owlapi5</artifactId>
+    <name>${project.groupId}.${project.artifactId}</name>
+    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
-            <groupId>de.tu-dresden.inf.lat</groupId>
-            <artifactId>lethe-core_2.12</artifactId>
+            <groupId>io.github.de-tu-dresden-inf-lat</groupId>
+            <artifactId>lethe-core</artifactId>
             <version>${project.version}</version>
-        </dependency>
+        </dependency>  
         <dependency>
             <groupId>net.sourceforge.owlapi</groupId>
             <artifactId>owlapi-distribution</artifactId>
-            <version>5.1.7</version>
+            <version>5.1.17</version>
         </dependency>
         <dependency>
             <groupId>net.sourceforge.owlapi</groupId>
@@ -41,7 +43,7 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>${project.groupId}</groupId>
-                                    <artifactId>lethe-owlapi4_2.12</artifactId>
+                                    <artifactId>lethe-owlapi4</artifactId>
                                     <version>${project.version}</version>
                                     <classifier>sources</classifier>
                                     <overWrite>false</overWrite>
@@ -49,7 +51,7 @@
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>${project.groupId}</groupId>
-                                    <artifactId>lethe-owlapi4_2.12</artifactId>
+                                    <artifactId>lethe-owlapi4</artifactId>
                                     <version>${project.version}</version>
                                     <classifier>test-sources</classifier>
                                     <overWrite>false</overWrite>
@@ -57,7 +59,7 @@
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>${project.groupId}</groupId>
-                                    <artifactId>lethe-owlapi4_2.12</artifactId>
+                                    <artifactId>lethe-owlapi4</artifactId>
                                     <version>${project.version}</version>
                                     <classifier>test-resources</classifier>
                                     <overWrite>false</overWrite>

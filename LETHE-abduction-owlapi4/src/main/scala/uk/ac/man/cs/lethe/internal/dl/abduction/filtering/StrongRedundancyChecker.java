@@ -9,6 +9,7 @@ import uk.ac.man.cs.lethe.internal.dl.datatypes.Ontology;
 import uk.ac.man.cs.lethe.internal.dl.datatypes.DLStatement;
 import uk.ac.man.cs.lethe.internal.dl.abduction.FixpointEliminator;
 import uk.ac.man.cs.lethe.internal.dl.owlapi.OWLExporter;
+import uk.ac.man.cs.lethe.internal.tools.OWLHelper;
 import java.util.*;
 
 
@@ -41,19 +42,19 @@ public class StrongRedundancyChecker {
 
         OWLOntology backgroundOntologyOWL = exporter.toOwlOntology(backgroundOntology);
         OWLOntologyManager man = OWLManager.createOWLOntologyManager();
-        man.addAxioms(backgroundOntologyOWL, unfilteredAxiomsInOWL);
+        OWLHelper.addAxioms(backgroundOntologyOWL, unfilteredAxiomsInOWL, man);
 
         Set<DLStatement> filteredAxioms = new HashSet<DLStatement>();
         Set<OWLAxiom> filteredOWLAxioms = new HashSet<OWLAxiom>();
         for(DLStatement ax:statementsToAxiomsMap.keySet()) {
             HashSet<OWLAxiom> axiomsBeingChecked = statementsToAxiomsMap.get(ax);
-            man.removeAxioms(backgroundOntologyOWL, axiomsBeingChecked);
+            OWLHelper.removeAxioms(backgroundOntologyOWL, axiomsBeingChecked, man);
             OWLReasoner reasoner = new Reasoner.ReasonerFactory().createReasoner(backgroundOntologyOWL);
 
             if (!reasoner.isEntailed(axiomsBeingChecked)) {
                 filteredAxioms.add(ax);
                 filteredOWLAxioms.addAll(axiomsBeingChecked);
-                man.addAxioms(backgroundOntologyOWL, axiomsBeingChecked);
+                OWLHelper.addAxioms(backgroundOntologyOWL, axiomsBeingChecked, man);
             }
         }
 

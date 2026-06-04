@@ -3,17 +3,19 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>de.tu-dresden.inf.lat</groupId>
-        <artifactId>lethe_2.12</artifactId>
-        <version>0.8-SNAPSHOT</version>
+        <groupId>io.github.de-tu-dresden-inf-lat</groupId>
+        <artifactId>lethe</artifactId>
+        <version>0.8.1</version>
     </parent>
 
-    <artifactId>lethe-owlapi4_2.12</artifactId>
+    <artifactId>lethe-owlapi4</artifactId>
+    <name>${project.groupId}.${project.artifactId}</name>
+    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
-            <groupId>de.tu-dresden.inf.lat</groupId>
-            <artifactId>lethe-core_2.12</artifactId>
+            <groupId>io.github.de-tu-dresden-inf-lat</groupId>
+            <artifactId>lethe-core</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -54,7 +56,9 @@
                     </execution>
                     <execution>
                         <id>create-test-jar</id>
+                        <!-- 
                         <phase>verify</phase>
+                        -->
                         <goals>
                             <goal>test-jar</goal>
                         </goals>

@@ -16,6 +16,7 @@ import uk.ac.man.cs.lethe.internal.dl.forgetting.direct.ALCFormulaPreparations
 import uk.ac.man.cs.lethe.internal.dl.forgetting.direct.ConceptClause
 import uk.ac.man.cs.lethe.internal.dl.forgetting.direct.RoleHierarchy
 import uk.ac.man.cs.lethe.internal.dl.owlapi._
+import uk.ac.man.cs.lethe.internal.tools.OWLHelper.{addAxioms, removeAxioms}
 
 
 object ExpansionDepth {
@@ -347,8 +348,8 @@ object OWLOntologyFilters {
 //    print(nonAlc.size+"\t"+axioms.size)
 
 
-    manager.removeAxioms(owlOntology, (owlOntology.getAxioms(Imports.INCLUDED).iterator.asScala.toSet--alc).asJava)
-    manager.addAxioms(owlOntology,nonLogical.asJava)
+    removeAxioms(owlOntology, (owlOntology.getAxioms(Imports.INCLUDED).iterator.asScala.toSet--alc).asJava, manager)
+    addAxioms(owlOntology,nonLogical.asJava,manager)
   }
 
   /**
@@ -367,7 +368,7 @@ object OWLOntologyFilters {
     //owlOntology.getTBoxAxioms(true)++owlOntology.getABoxAxioms(true)++owlOntology.getRBoxAxioms(true)
     var nonLogical = all.filter(!_.isLogicalAxiom)
 
-//    manager.removeAxioms(owlOntology, nonLogical.asJava)
+  //removeAxioms(owlOntology, nonLogical.asJava, manager)
     all = owlOntology.getAxioms(Imports.EXCLUDED).iterator.asScala.toSet
 
     var nonAlch = all.filterNot(ax =>
@@ -376,20 +377,20 @@ object OWLOntologyFilters {
     logger.trace("Removing: "+nonAlch.toString)
     logger.info("Removing "+nonAlch)
     logger.info("Removing "+nonAlch.size+" non ALCH-axioms out of "+all.size+" axioms in the ontology.")
-    manager.removeAxioms(owlOntology, nonAlch.asJava)
+    removeAxioms(owlOntology, nonAlch.asJava, manager)
     //    assert(owlOntology.getAxiomCount==(all.size-nonAlch.size),
     //      "not same: "+owlOntology.getLogicalAxiomCount+", "+(all.size-nonAlch.size))
     logger.debug(s"Restricted with ${owlOntology}")
   
     logger.debug(s"Adding non-logical axioms again")
-    manager.addAxioms(owlOntology,nonLogical.asJava)
+    addAxioms(owlOntology,nonLogical.asJava,manager)
   }
 
   def clearABox(owlOntology: OWLOntology): Unit = {
     val manager = OWLManager.createOWLOntologyManager()
     addImportsClosure(owlOntology)
 
-    manager.removeAxioms(owlOntology, owlOntology.getABoxAxioms(Imports.INCLUDED))
+    removeAxioms(owlOntology, owlOntology.getABoxAxioms(Imports.INCLUDED), manager)
   }
 
   /**
@@ -407,7 +408,7 @@ object OWLOntologyFilters {
 
     logger.trace("Removing: "+nonAlchi.toString)
 
-    manager.removeAxioms(owlOntology, nonAlchi.asJava) // 
+    removeAxioms(owlOntology, nonAlchi.asJava, manager)
     logger.debug(s"Restricted with ${owlOntology}")
   }
 
@@ -420,7 +421,7 @@ object OWLOntologyFilters {
 
     logger.trace("Removing: "+non.toString)
 
-    manager.removeAxioms(owlOntology, non.asJava) // 
+    removeAxioms(owlOntology, non.asJava, manager)
     logger.debug(s"Restricted with ${owlOntology}")
   }
 
@@ -434,7 +435,7 @@ object OWLOntologyFilters {
 
     logger.trace("Removing: "+non.toString)
 
-    manager.removeAxioms(owlOntology, non.asJava) //
+    removeAxioms(owlOntology, non.asJava, manager)
     logger.debug(s"Restricted with ${owlOntology}")
   }
 
@@ -443,7 +444,7 @@ object OWLOntologyFilters {
     var manager = OWLManager.createOWLOntologyManager();
     addImportsClosure(owlOntology)
 
-    manager.removeAxioms(owlOntology, owlOntology.getABoxAxioms(Imports.INCLUDED))
+    removeAxioms(owlOntology, owlOntology.getABoxAxioms(Imports.INCLUDED), manager)
 
   }
 
@@ -452,7 +453,7 @@ object OWLOntologyFilters {
     ontology.getImportsDeclarations.forEach(
       importDec => ontology.getOWLOntologyManager.applyChange(new RemoveImport(ontology, importDec))
     )
-    imports.forEach(imp => ontology.getOWLOntologyManager.addAxioms(ontology, imp.getAxioms()))
+    imports.forEach(imp => addAxioms(ontology, imp.getAxioms(), ontology.getOWLOntologyManager()))
   }
 
 }

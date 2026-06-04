@@ -9,6 +9,7 @@ import uk.ac.man.cs.lethe.internal.dl.filters.{OWLFamilies, OWLOntologyFilters}
 import uk.ac.man.cs.lethe.internal.dl.owlapi.{ModuleExtractor, OWLApiConverter}
 import uk.ac.man.cs.lethe.internal.tools.{Cancelable, CanceledException}
 import uk.ac.man.cs.lethe.internal.tools.formatting.SimpleDLFormatter
+import uk.ac.man.cs.lethe.internal.tools.OWLHelper.addAxioms
 
 import java.util
 import scala.collection.JavaConverters._
@@ -60,7 +61,7 @@ class OWLAbducer extends Cancelable {
   def simplify(hypothesis: Set[OWLLogicalAxiom]) = {
     val manager = OWLManager.createOWLOntologyManager()
     val copy = manager.createOntology()
-    manager.addAxioms(copy, ontology.getAxioms(Imports.INCLUDED))
+    addAxioms(copy, ontology.getAxioms(Imports.INCLUDED), manager)
     hypothesisSimplifier = new HypothesisSimplifier(copy)
     hypothesisSimplifier.simplify(hypothesis)
   }

@@ -1,10 +1,11 @@
 package uk.ac.man.cs.lethe.abduction.cmd
 
-import abduction.DLStatementAdapter
+import uk.ac.man.cs.lethe.abduction.DLStatementAdapter
 import org.semanticweb.owlapi.apibinding.OWLManager
 import org.semanticweb.owlapi.model.parameters.Imports
 import org.semanticweb.owlapi.model.{IRI, OWLEntity}
 import uk.ac.man.cs.lethe.abduction.OWLAbducer
+import uk.ac.man.cs.lethe.internal.tools.OWLHelper.addAxioms
 
 import java.io.{File, FileOutputStream}
 import scala.collection.JavaConverters.{asScalaSetConverter, setAsJavaSetConverter}
@@ -70,7 +71,7 @@ object AbductionCmd {
           done=true
         else {
           val hypOnt = manager.createOntology()
-          manager.addAxioms(hypOnt,nextHypothesis)
+          addAxioms(hypOnt,nextHypothesis,manager)
           manager.saveOntology(hypOnt, new FileOutputStream(new File("hypothesis_"+count+".owl")))
           count+=1
         }

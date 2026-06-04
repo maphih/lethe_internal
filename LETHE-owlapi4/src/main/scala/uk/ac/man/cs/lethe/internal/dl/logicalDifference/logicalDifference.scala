@@ -2,6 +2,7 @@ package uk.ac.man.cs.lethe.internal.dl.logicalDifference
 
 import org.semanticweb.HermiT.Reasoner
 import uk.ac.man.cs.lethe.internal.dl.owlapi.{ModuleExtractor, OWLApiInterface, OWLExporter}
+import uk.ac.man.cs.lethe.internal.tools.OWLHelper.{addAxioms, removeAxioms}
 
 import java.util.{HashSet, Set}
 import scala.collection.JavaConversions._
@@ -440,11 +441,9 @@ object LogicalEntailmentCheckerClassical extends LogicalEntailmentChecker {
       Some(a)
     } else getAxiomsToCheck(a)
 
-    manager.addAxioms(o, axiomsToAdd)
-
+    addAxioms(o, axiomsToAdd, manager)
     val result = axiomsToCheck.forall(reasoner.isEntailed)
-
-    manager.removeAxioms(o, axiomsToAdd)
+    removeAxioms(o, axiomsToAdd, manager)
 
     return result
 

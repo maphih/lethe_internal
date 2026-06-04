@@ -9,7 +9,7 @@ import org.semanticweb.owlapi.io.OWLXMLOntologyFormat
 import org.semanticweb.owlapi.formats.ManchesterSyntaxDocumentFormat
 import org.semanticweb.owlapi.model.{IRI, OWLAxiom, OWLLogicalAxiom, OWLOntology, OWLOntologyManager}
 import uk.ac.man.cs.lethe.internal.dl.owlapi.OWLExporter
-
+import uk.ac.man.cs.lethe.internal.tools.OWLHelper
 
 object ExtractSmallSubOntology { 
 
@@ -61,7 +61,7 @@ object VersionGenerator {
     println("Removing non-logical axioms")
     owlOntology.getAxioms().iterator().asScala.foreach{ ax =>
       if(!ax.isInstanceOf[OWLLogicalAxiom])
-	owlOntologyManager.removeAxiom(owlOntology, ax)
+	      owlOntologyManager.removeAxiom(owlOntology, ax)
     }
 
     generateVersions(owlOntology, 
@@ -90,11 +90,7 @@ object VersionGenerator {
 		   number: Int) = { 
     println("Removing "+number+" axioms")
     val toRemove = asScalaSet(owlOntology.getLogicalAxioms).take(number)
-    owlOntologyManager.removeAxioms(owlOntology, toRemove.asJava)
-    // (1 to number).foreach{ i =>
-    //   val axiom = owlOntology.logicalAxioms().iterator.asScala.head
-    //   owlOntologyManager.removeAxiom(owlOntology, axiom)
-    // }
+    OWLHelper.removeAxioms(owlOntology, toRemove.asJava, owlOntologyManager)
   }
 
 }

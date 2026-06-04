@@ -12,6 +12,8 @@ import uk.ac.man.cs.lethe.internal.dl.owlapi.OWLApiInterface
 import uk.ac.man.cs.lethe.internal.forgetting.Forgetter
 import uk.ac.man.cs.lethe.internal.tools.{Cancelable, ProgressBarAttached, SwingProgressBar}
 import uk.ac.man.cs.lethe.internal.tools.threads.CustomExecutionContext
+import uk.ac.man.cs.lethe.internal.tools.OWLHelper.{addAxioms, removeAxioms}
+
 
 import scala.collection.JavaConverters._
 import scala.concurrent.future
@@ -175,12 +177,12 @@ class CentralPanel extends BoxPanel(Orientation.Vertical) {
         .asScala
         .filter(_.isInstanceOf[OWLTransitiveObjectPropertyAxiom]).toSet
 
-    owlOntology.getOWLOntologyManager.removeAxioms(owlOntology,removedTransitivityAxioms.asJava)
+    removeAxioms(owlOntology,removedTransitivityAxioms.asJava,owlOntology.getOWLOntologyManager)
 
   }
 
   def reAddTransitivityAxioms() = {
-    owlOntology.getOWLOntologyManager.addAxioms(owlOntology,removedTransitivityAxioms.asJava)
+   addAxioms(owlOntology,removedTransitivityAxioms.asJava, owlOntology.getOWLOntologyManager)
   }
 
 

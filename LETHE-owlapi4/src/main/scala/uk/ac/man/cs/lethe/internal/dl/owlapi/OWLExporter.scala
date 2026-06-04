@@ -86,7 +86,7 @@ class OWLExporter {
     case ConjunctiveDLStatement(cs) => cs.flatMap(toOwl(owlOntology,_))
     case DisjunctiveDLStatement(ds) =>
       Set(factory.getOWLClassAssertionAxiom(
-        factory.getOWLObjectUnionOf(ds.map(toOwlConcept(owlOntology, _)).asJava),
+        factory.getOWLObjectUnionOf(ds.map(toOwlConcept(owlOntology, _)).toArray: _*),
         theIndividual(owlOntology)))
     case a: Assertion => Set(toOwl(owlOntology, a))
     case a: Axiom => Set(toOwl(owlOntology, a))
@@ -110,9 +110,9 @@ class OWLExporter {
     case ConjunctiveAssertion(cs) => toOwlConcept(owlOntology, ConjunctiveDLStatement(cs.toSet[DLStatement]))
     case DisjunctiveAssertion(ds) => toOwlConcept(owlOntology, DisjunctiveDLStatement(ds.toSet[DLStatement]))
     case ConjunctiveDLStatement(cs) => factory.getOWLObjectIntersectionOf(
-      cs.map(toOwlConcept(owlOntology,_)).asJava)
+      cs.map(toOwlConcept(owlOntology,_)).toArray: _*)
     case DisjunctiveDLStatement(ds) => factory.getOWLObjectIntersectionOf(
-      ds.map(toOwlConcept(owlOntology,_)).asJava)
+      ds.map(toOwlConcept(owlOntology,_)).toArray: _*)
     case Subsumption(c,d) => toOwl(owlOntology,
       UniversalRoleRestriction(TopRole, ConceptDisjunction(Set(ConceptComplement(c),d))))
     case ConceptEquivalence(c,d) => factory.getOWLObjectIntersectionOf(
@@ -157,12 +157,12 @@ class OWLExporter {
     case ConceptConjunction(conjuncts) if conjuncts.size == 0 => toOwl(owlOntology, TopConcept)
     case ConceptConjunction(conjuncts) if conjuncts.size == 1 => toOwl(owlOntology, conjuncts.head)
     case ConceptConjunction(conjuncts) =>
-      factory.getOWLObjectIntersectionOf(conjuncts.map(toOwl(owlOntology, _)).asJava)
+      factory.getOWLObjectIntersectionOf(conjuncts.map(toOwl(owlOntology, _)).toArray: _*)
     case ConceptDisjunction(disjuncts) if disjuncts.size == 0 => toOwl(owlOntology, BottomConcept)
     case ConceptDisjunction(disjuncts) if disjuncts.size == 1 => toOwl(owlOntology, disjuncts.head)
     case ConceptDisjunction(disjuncts) =>
       assert(disjuncts.size > 1, "invalid disjunction: only contains: " + disjuncts)
-      factory.getOWLObjectUnionOf(disjuncts.map(toOwl(owlOntology, _)).asJava)
+      factory.getOWLObjectUnionOf(disjuncts.map(toOwl(owlOntology, _)).toArray: _*)
     case ExistentialRoleRestriction(role, concept) =>
       factory.getOWLObjectSomeValuesFrom(toOwl(owlOntology, role), toOwl(owlOntology, concept))
     case UniversalRoleRestriction(role, concept) =>
@@ -175,7 +175,7 @@ class OWLExporter {
       factory.getOWLObjectExactCardinality(n, toOwl(owlOntology, role), toOwl(owlOntology, concept))
 
     case NominalSet(individuals: Set[Individual]) =>
-      factory.getOWLObjectOneOf(individuals.map(toOwl(owlOntology, _)).asJava)
+      factory.getOWLObjectOneOf(individuals.map(toOwl(owlOntology, _)).toArray: _*)
   }
 
   def toOwl(owlOntology: OWLOntology, role: BaseRole) = role match {
