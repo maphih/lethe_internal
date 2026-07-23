@@ -44,35 +44,33 @@ LETHE can be compiled both with maven and with sbt. For maven, use the following
     mvn install
 
 ## Maven Dependencies
-
-After installing 0.8, add one of the following dependencies, depending on whether you use OWL API 5 or OWL API 4:
-
-After installation, one of the following maven dependencies should be added to your project, depending on whether you are using OWL API 4 or OWL API 5:
+Lethe_0.8 is published on maven central.
+To use it, add one of the following dependencies, depending on whether you use OWL API 5 or OWL API 4:
 
     <dependency>
-        <groupId>de.tu-dresden.inf.lat</groupId>
-        <artifactId>lethe-owlapi4_2.12</artifactId>
-        <version>0.8-SNAPSHOT</version>
+        <groupId>io.github.de-tu-dresden-inf-lat</groupId>
+        <artifactId>lethe-owlapi4</artifactId>
+        <version>0.8.1</version>
     </dependency>
 	    
 	 <dependency>
-        <groupId>de.tu-dresden.inf.lat</groupId>
-        <artifactId>lethe-owlapi5_2.12</artifactId>
-        <version>0.8-SNAPSHOT</version>
+        <groupId>io.github.de-tu-dresden-inf-lat</groupId>
+        <artifactId>lethe-owlapi5</artifactId>
+        <version>0.8.1</version>
     </dependency>
 
-To use LETHE-abduction (which relies on different reasoning algorithms), add instead one of the following dependencies:
+To use LETHE-abduction (which relies on different reasoning algorithms), add one of the following dependencies instead:
 	 
     <dependency>
-        <groupId>de.tu-dresden.inf.lat</groupId>
-        <artifactId>lethe-abduction-owlapi4_2.12</artifactId>
-        <version>0.8-SNAPSHOT</version>
+        <groupId>io.github.de-tu-dresden-inf-lat</groupId>
+        <artifactId>lethe-abduction-owlapi4</artifactId>
+        <version>0.8.1</version>
     </dependency>
 	    
 	 <dependency>
-        <groupId>de.tu-dresden.inf.lat</groupId>
-        <artifactId>lethe-abduction-owlapi5_2.12</artifactId>
-        <version>0.8-SNAPSHOT</version>
+        <groupId>io.github.de-tu-dresden-inf-lat</groupId>
+        <artifactId>lethe-abduction-owlapi5</artifactId>
+        <version>0.8.1</version>
     </dependency>
 
 
