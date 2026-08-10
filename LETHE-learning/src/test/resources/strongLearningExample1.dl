@@ -1,0 +1,25 @@
+// Parent example to stronly learn "Mother" as concept
+//
+// Positive: Hanna, Eva
+// Negative: Erica, Tom
+// kids: Peter, Jim
+//
+
+hasChild(hanna, peter1)
+Female(hanna)
+
+Female(eva)
+Parent(eva)
+
+Female(erica)
+Childless(erica)
+
+hasChild(tom, peter2)
+Male(tom)
+
+Person(peter1)
+Person(peter2)
+
+Parent = EhasChild.Person
+(Male n Female) <= BOTTOM
+Childless <= ¬EhasChild.Person

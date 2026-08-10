@@ -65,13 +65,28 @@ class ExtendedABoxClause(var literals: Map[Individual, ConceptClause] = Map(),
   def this(individual: Individual, conceptClause: ConceptClause) =
     this(Map(individual -> conceptClause), Set(), Set(), false)
 
+  def isEmpty() =
+    literals.keys.forall(literals(_).literals.isEmpty) && roleAssertions.isEmpty && negatedRoleAssertions.isEmpty
+
   def without(ra: RoleAssertion): ExtendedABoxClause =
     new ExtendedABoxClause(Map[Individual, ConceptClause]()++literals,
       roleAssertions-ra,
       Set[RoleAssertion]()++negatedRoleAssertions, temp)
 
+  def _with(ra: RoleAssertion): ExtendedABoxClause =
+    new ExtendedABoxClause(Map[Individual, ConceptClause]() ++ literals,
+      roleAssertions + ra,
+      Set[RoleAssertion]() ++ negatedRoleAssertions, temp)
+
+
+
   def without(individual: Individual, literal: ConceptLiteral) =
     replace(individual, literals(individual).without(literal))
+
+  def _with(individual: Individual, literal: ConceptLiteral) = {
+    replace(individual, literals(individual)._with(literal))
+  }
+
 
   /**
    * union of the literal sets of this clause and the other
@@ -104,7 +119,7 @@ class ExtendedABoxClause(var literals: Map[Individual, ConceptClause] = Map(),
   override def toString = {
     var cl = literals.flatMap(_ match {
       case (individual, clause) => clause.literals.map(_.toString+"("+individual.toString+")")
-    }).toSet[String]
+    }).toSeq
     cl ++= roleAssertions.map(_.toString)
     cl ++= negatedRoleAssertions.map("-"+_.toString)
     val result = cl.mkString(" v ")
@@ -132,6 +147,21 @@ class ExtendedABoxClause(var literals: Map[Individual, ConceptClause] = Map(),
   override def subConcepts = literals.values.map(_.subConcepts).reduce(_++_)
 
 
+  def canEqual(other: Any): Boolean = other.isInstanceOf[ExtendedABoxClause]
+
+  override def equals(other: Any): Boolean = other match {
+    case that: ExtendedABoxClause =>
+      (that canEqual this) &&
+        literals == that.literals &&
+        roleAssertions == that.roleAssertions &&
+        negatedRoleAssertions == that.negatedRoleAssertions
+    case _ => false
+  }
+
+  override def hashCode(): Int = {
+    val state = Seq[Any](literals)++ Seq[Any](roleAssertions)++ Seq[Any](negatedRoleAssertions)
+    state.map(_.hashCode()).foldLeft(0)((a, b) => 31 * a + b)
+  }
 }
 
 
