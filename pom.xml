@@ -264,6 +264,7 @@
         <module>LETHE-abduction</module>
         <module>LETHE-abduction-owlapi4</module>
         <module>LETHE-abduction-owlapi5</module>
+        <module>LETHE-learning</module>
     </modules>
 
 </project>

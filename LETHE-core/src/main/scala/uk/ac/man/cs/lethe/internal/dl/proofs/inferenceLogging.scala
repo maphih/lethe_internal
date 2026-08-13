@@ -13,12 +13,19 @@ case class TranslatedDerivation(
 
 trait AbstractInferenceLogger {
   def sendInference(derivation: AbstractDerivation)
+
   def sendInference(derivations: Iterable[AbstractDerivation])
-  def sendInputClauses(clauses: Iterable[ConceptClause])
+
+  def sendInputClauses(clauses: Iterable[_ <: Expression])
+
   def notifyDefinerFactory(definerFactory: DefinerFactory)
+
   var derivations: List[AbstractDerivation]
-  var inputClauses: Set[ConceptClause]
+  var inputClauses: Set[Expression]
+
   def clear(): Unit
+
+  def sendInputClause(inputClause: Expression)
 }
 
 object InferenceLogger extends AbstractInferenceLogger {
@@ -28,14 +35,15 @@ object InferenceLogger extends AbstractInferenceLogger {
   val dummyLogger = new AbstractInferenceLogger {
     override def sendInference(derivation: AbstractDerivation): Unit = {}
     override def sendInference(derivations: Iterable[AbstractDerivation]): Unit = {}
-    override def sendInputClauses(clauses: Iterable[ConceptClause]): Unit = {}
+    override def sendInputClauses(clauses: Iterable[_ <: Expression]): Unit = {}
+    override def sendInputClause(clause: Expression): Unit = {}
     override def notifyDefinerFactory(definerFactory: DefinerFactory): Unit = {}
     override var derivations = List[AbstractDerivation]()
     override var inputClauses = Set()
     override def clear() = {}
   }
 
-  var inputClauses = Set()
+  var inputClauses = Set[Expression]()
 
   var derivations = List[AbstractDerivation]()
 
@@ -61,16 +69,16 @@ object InferenceLogger extends AbstractInferenceLogger {
 
     derivations ::= derivation.copy
 
-   /* val trans =
-      TranslatedDerivation(derivation.premisses.map(translate).toSet,
-        derivation.conclusions.map(translate).toSet)
+    /* val trans =
+       TranslatedDerivation(derivation.premisses.map(translate).toSet,
+         derivation.conclusions.map(translate).toSet)
 
-    //val trans =
-    //  TranslatedDerivation(derivation.premisses.map(toStatement).toSet,
-     //   derivation.conclusions.map(toStatement).toSet)
+     //val trans =
+     //  TranslatedDerivation(derivation.premisses.map(toStatement).toSet,
+      //   derivation.conclusions.map(toStatement).toSet)
 
-    translatedDerivations += trans
-*/
+     translatedDerivations += trans
+ */
     //println(format(trans))
 
     //printWriter.println(format(trans))
@@ -80,9 +88,12 @@ object InferenceLogger extends AbstractInferenceLogger {
     derivations.foreach(sendInference)
   }
 
-  override def sendInputClauses(inputClauses: Iterable[ConceptClause]) = {
+  override def sendInputClauses(inputClauses: Iterable[_ <: Expression]) = {
     this.inputClauses++=inputClauses
   }
+
+  override def sendInputClause(inputClause: Expression) =
+    this.inputClauses+=inputClause
 
   override def notifyDefinerFactory(definerFactory: DefinerFactory) =
     definerFactories += definerFactory
@@ -104,7 +115,7 @@ object InferenceLogger extends AbstractInferenceLogger {
   }
 
   def retrace(axiom: DLStatement, visited: Set[TranslatedDerivation])
-      : List[TranslatedDerivation] = {
+  : List[TranslatedDerivation] = {
     var trace = List[TranslatedDerivation]()
 
     translatedDerivations.find(_.conclusions.contains(axiom)).foreach{ der =>
@@ -121,10 +132,10 @@ object InferenceLogger extends AbstractInferenceLogger {
 
 
   def format(derivation: TranslatedDerivation): String = {
-    
+
     return derivation.premisses.map(formatAxiom).mkString("\n")+
-    "\n----------------------------------------------------------\n"+
-    derivation.conclusions.map(formatAxiom).mkString("\n")+"\n"
+      "\n----------------------------------------------------------\n"+
+      derivation.conclusions.map(formatAxiom).mkString("\n")+"\n"
   }
 
   def toStatement(clause: ConceptClause): DLStatement = {
@@ -153,14 +164,14 @@ object InferenceLogger extends AbstractInferenceLogger {
     case Subsumption(c1, c2) => Subsumption(weakTransformBack(c1), weakTransformBack(c2))
     case ConceptEquivalence(c1, c2) => ConceptEquivalence(weakTransformBack(c1), weakTransformBack(c2))
   }
-  
-  def weakTransformBack(assertion: Assertion): Assertion = assertion match { 
+
+  def weakTransformBack(assertion: Assertion): Assertion = assertion match {
     case ConceptAssertion(c, i) => ConceptAssertion(weakTransformBack(c), i)
     case r: RoleAssertion => r
   }
 
-  def weakTransformBack(concept: Concept): Concept = concept match { 
-//    case l: ConceptLiteral => weakTransformBack(l.convertBack)
+  def weakTransformBack(concept: Concept): Concept = concept match {
+    //    case l: ConceptLiteral => weakTransformBack(l.convertBack)
     case TopConcept => TopConcept
     case BottomConcept => BottomConcept
     case d: BaseConcept => d //translateDefiner(d)
@@ -182,7 +193,7 @@ object InferenceLogger extends AbstractInferenceLogger {
         defs = bd
     }
 
-    val conjuncts = defs.map(d => 
+    val conjuncts = defs.map(d =>
       if(ALCFormulaPreparations.definerMap.contains(d))
         ALCFormulaPreparations.definerMap(d)
       else

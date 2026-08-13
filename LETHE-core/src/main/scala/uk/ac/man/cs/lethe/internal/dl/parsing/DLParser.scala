@@ -2,8 +2,7 @@ package uk.ac.man.cs.lethe.internal.dl.parsing
 
 import java.io.File
 import java.net.URL
-
-import scala.io.Source
+import scala.io.{BufferedSource, Source}
 import scala.util.parsing.combinator.syntactical._
 import scala.util.parsing.combinator.RegexParsers
 import uk.ac.man.cs.lethe.internal.dl.datatypes._
@@ -42,11 +41,15 @@ object DLParser extends RegexParsers {
   }
 
   def parse(file: File): Ontology = {
+    parse(Source.fromFile(file, "iso-8859-1"))
+  }
+
+  def parse(source: BufferedSource): Ontology = {
     val result = new Ontology()
-    
-    Source.fromFile(file, "iso-8859-1").getLines().foreach(line => 
-      if(!line.matches("""(\s*|//.*|#.*|\*\*.*)""") )
-	result.addStatement(parseDLStatement(line)))
+
+    source.getLines().foreach(line =>
+      if (!line.matches("""(\s*|//.*|#.*|\*\*.*)"""))
+        result.addStatement(parseDLStatement(line)))
 
     result
   }

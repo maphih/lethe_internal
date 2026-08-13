@@ -4,7 +4,7 @@ package uk.ac.man.cs.lethe.internal.dl.datatypes
 
 
 import com.typesafe.scalalogging.Logger
-import uk.ac.man.cs.lethe.internal.dl.datatypes.extended.{ConjunctiveAssertion, ConjunctiveDLStatement, DisjunctiveAssertion, DisjunctiveDLStatement, GreatestFixpoint, LeastFixpoint, NegatedRoleAssertion}
+import uk.ac.man.cs.lethe.internal.dl.datatypes.extended.{ConjunctiveAssertion, ConjunctiveDLStatement, DisjunctiveAssertion, GreatestFixpoint, LeastFixpoint, NegatedRoleAssertion}
 import uk.ac.man.cs.lethe.internal.dl.datatypes
 import uk.ac.man.cs.lethe.internal.dl.forgetting.QuickConceptForgetter
 import uk.ac.man.cs.lethe.internal.dl.forgetting.abox.ABoxForgetter
@@ -114,6 +114,24 @@ case class ConceptDisjunction(var disjuncts: Set[Concept]) extends Concept {
       "EMPTY_DISJ"
     else
       disjuncts.mkString("d(", " u ", ")")
+}
+
+/**
+ * Careful: new and currently only for learning project used. Otherwise, NominalSet is used instead.
+ */
+case class Nominal(individual: Individual) extends Concept {
+
+  override def toString = "{"+individual+"}"
+
+  override def signature = Set()
+
+  override def atomicConcepts = Set()
+
+  override def roleSymbols = Set()
+
+  override def size = 1
+
+  override def subConcepts = MultiSet(this)
 }
 
 case class NominalSet(nominals: Set[Individual]) extends Concept {
@@ -547,6 +565,17 @@ class Ontology(var tbox:TBox = new TBox(Set()),
   override def roleSymbols = tbox.roleSymbols ++ rbox.roleSymbols ++ abox.roleSymbols
   override def subConcepts = tbox.subConcepts ++ rbox.subConcepts ++ abox.subConcepts
 
+  def individuals(): Set[Individual] =
+    abox.assertions.flatMap(_ match {
+      case RoleAssertion(_, a, b) => Set(a, b)
+      case ConceptAssertion(_, a) => Set(a)
+    }) ++ subConcepts.keys.flatMap {
+      case Nominal(a) => Set(a)
+      case NominalSet(as) => as.toSet[Individual]
+      case _ => Set[Individual]()
+    }
+
+
   override def foreachNested(function: Expression => Unit) = {
     super.foreachNested(function)
     tbox.foreachNested(function)
@@ -580,6 +609,7 @@ object DLHelpers {
   //implicit val (logger, formatter, appender) = ZeroLoggerFactory.newLogger(this)
   //import formatter._
   val logger = Logger(DLHelpers.getClass)
+
 
   def nnf(ontology: Ontology): Ontology =
     new Ontology(tbox = nnf(ontology.tbox),
@@ -675,7 +705,8 @@ object DLHelpers {
       LeastFixpoint(v, neg(
         QuickConceptForgetter.replaceCBy(c, Set(v), ConceptComplement(v))
       ))
-    case f: NominalSet => ConceptComplement(f);
+    case f: NominalSet => ConceptComplement(f)
+    case n: Nominal => ConceptComplement(n)
   }
 
   def conjunction(concepts: Iterable[Concept]): Concept = {
@@ -901,18 +932,6 @@ object CheapSimplifier {
   def simplify(statement: DLStatement): DLStatement = statement match {
     case axiom: Axiom => simplify(axiom)
     case assertion: Assertion => simplify(assertion)
-    case DisjunctiveDLStatement(statements) =>
-      val simplified = statements.map(simplify)
-      if(simplified.size==1)
-        simplified.head
-      else
-        DisjunctiveDLStatement(simplified)
-    case ConjunctiveDLStatement(statements) =>
-      val simplified = statements.map(simplify)
-      if(simplified.size==1)
-        simplified.head
-      else
-        ConjunctiveDLStatement(simplified)
     case _ => statement
   }
 
@@ -926,7 +945,7 @@ object CheapSimplifier {
   def simplify(assertion: Assertion): Assertion = assertion match {
 
     case ConceptAssertion(c, i) =>
-      /*simplify(c) match {
+      simplify(c) match {
         case ExistentialRoleRestriction(r: BaseRole, NominalSet(nominals)) if nominals.size==1 =>
           RoleAssertion(r, i, nominals.head)
 
@@ -942,7 +961,7 @@ object CheapSimplifier {
         case other =>
           ConceptAssertion(other, i)
 
-      }*/
+      }
       ConceptAssertion(simplify(c), i)
     case DisjunctiveConceptAssertion(cas) => {
       var cas2 = cas.map(simplify(_).asInstanceOf[ConceptAssertion])
@@ -1044,7 +1063,7 @@ object CheapSimplifier {
     case ConceptDisjunction(ds) => {
       var ds2 = ds.map(simplify)
       ds2 = ds2.flatMap(_ match {
-        case ConceptDisjunction(ds) => ds
+        case ConceptDisjunction(dss) => dss
         case BottomConcept => Set[Concept]()
         case c => Set(c)
       })
@@ -1060,7 +1079,7 @@ object CheapSimplifier {
     case ConceptConjunction(cs) => {
       var cs2 = cs.map(simplify)
       cs2 = cs2.flatMap(_ match {
-        case ConceptConjunction(cs) => cs
+        case ConceptConjunction(css) => css
         case TopConcept => Set[Concept]()
         case c => Set(c)
       })
@@ -1388,9 +1407,10 @@ object OntologyBeautifier {
           CheapSimplifier.simplify(ConceptDisjunction(
             posPart(Set(b) + ConceptComplement(a)))
           ))
-      //nice(Subsumption(a, ConceptDisjunction(Set(b)))
+      //nice(Subsumption(a, ConceptDisjunction(Set(b))))
 
-      case _ => simplified
+
+      case _ => axiom
     }
   }
 
