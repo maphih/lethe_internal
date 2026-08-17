@@ -34,7 +34,7 @@
     </scm>
 
     <properties>
-        <revision>0.8.1</revision>
+        <revision>0.8.2</revision>
         <scala.version>2.12.6</scala.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <skipTests>true</skipTests>

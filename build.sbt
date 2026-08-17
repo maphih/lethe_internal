@@ -3,7 +3,7 @@
 // General settings
 ThisBuild / name := "lethe"
 ThisBuild / organization := "io.github.de-tu-dresden-inf-lat"
-ThisBuild / version := "0.8.1"
+ThisBuild / version := "0.8.2"
 ThisBuild / scalaVersion := "2.12.6"
 ThisBuild / retrieveManaged := true // copy dependencies
 ThisBuild / scalacOptions += "-target:jvm-1.8"

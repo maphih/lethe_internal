@@ -50,13 +50,13 @@ To use it, add one of the following dependencies, depending on whether you use O
     <dependency>
         <groupId>io.github.de-tu-dresden-inf-lat</groupId>
         <artifactId>lethe-owlapi4</artifactId>
-        <version>0.8.1</version>
+        <version>0.8.2</version>
     </dependency>
 	    
 	 <dependency>
         <groupId>io.github.de-tu-dresden-inf-lat</groupId>
         <artifactId>lethe-owlapi5</artifactId>
-        <version>0.8.1</version>
+        <version>0.8.2</version>
     </dependency>
 
 To use LETHE-abduction (which relies on different reasoning algorithms), add one of the following dependencies instead:
@@ -64,13 +64,13 @@ To use LETHE-abduction (which relies on different reasoning algorithms), add one
     <dependency>
         <groupId>io.github.de-tu-dresden-inf-lat</groupId>
         <artifactId>lethe-abduction-owlapi4</artifactId>
-        <version>0.8.1</version>
+        <version>0.8.2</version>
     </dependency>
 	    
 	 <dependency>
         <groupId>io.github.de-tu-dresden-inf-lat</groupId>
         <artifactId>lethe-abduction-owlapi5</artifactId>
-        <version>0.8.1</version>
+        <version>0.8.2</version>
     </dependency>
 
 
